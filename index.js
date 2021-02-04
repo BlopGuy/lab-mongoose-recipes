@@ -25,3 +25,15 @@ mongoose
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
+
+  Recipe.create({
+    title: 'Pao com queijo',
+    level: 'Easy Peasy',
+    ingredients: 'Pao, queijo',
+    cuisine: 'preguica',
+    dishtype: 'breakfast',
+    duration: 2,
+    creator: 'Moi'
+  }).then(() => {
+    console.log(`New Recipe ${this.title}`);
+  })
