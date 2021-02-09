@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
-
-// Import of the model Recipe from './models/Recipe.model.js'
 const Recipe = require('./models/Recipe.model');
-// Import of the data from './data.json'
 const data = require('./data');
 
 const MONGODB_URI = 'mongodb://localhost:27017/recipe-app';
 
-// Connection to the database "recipe-app"
 mongoose
   .connect(MONGODB_URI, {
     useCreateIndex: true,
@@ -16,24 +12,58 @@ mongoose
   })
   .then(self => {
     console.log(`Connected to the database: "${self.connection.name}"`);
-    // Before adding any documents to the database, let's delete all previous entries
     return self.connection.dropDatabase();
-  })
-  .then(() => {
-    // Run your code here, after you have insured that the connection was made
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
 
-  Recipe.create({
-    title: 'Pao com queijo',
-    level: 'Easy Peasy',
-    ingredients: 'Pao, queijo',
-    cuisine: 'preguica',
-    dishtype: 'breakfast',
-    duration: 2,
-    creator: 'Moi'
-  }).then(() => {
-    console.log(`New Recipe ${this.title}`);
+// iteration 2
+
+let newRecipe = {
+  title: 'pao com queijo',
+  level: 'Easy Peasy',
+  ingredients: ['pão', 'queijo'],
+  cuisine: 'mundial',
+  dishType: 'Snack',
+  image:
+    '/images/pao com queijo.jpg',
+  duration: 2,
+  creator: 'Hungry Student'
+};
+
+Recipe
+  .create(newRecipe)
+  .then(result => console.log(`recipe added: ${result.title}`))
+  .catch(err => console.log(err));
+
+// iteration 3
+
+Recipe
+  .insertMany(data)
+  .then(result => {
+    result.forEach(recipe => {
+      console.log(`recipe for ${recipe.title} inserted successfully`);
+    });
   })
+  .catch(err => console.log(err));
+
+// iteration 4
+
+Recipe
+  .updateOne({ title: 'Asian Glazed Chicken Thighs' }, { duration: 100 })
+  .then(() => console.log(`The recipe is updated`))
+  .catch(err => console.log(err));
+
+// iteration 5
+
+Recipe
+  .deleteOne({ title: 'Orange and Milk-Braised Pork Carnitas' })
+  .then(() => console.log(`The recipe is deleted`))
+  .catch(err => console.log(err));
+
+// iteration 6
+
+mongoose.connection
+  .close()
+  .then(() => console.log('connection closed'));
